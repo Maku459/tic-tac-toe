@@ -10,7 +10,8 @@ export default function Board({
   onPlay: (nextSquares: any) => void;
 }) {
   function handleClick(i: number) {
-    if (squares[i] || calculateWinner(squares)) {
+    const win = calculateWinner(squares);
+    if (squares[i] || (win.winner != null && win.line != null)) {
       return;
     }
     const nextSquares = squares.slice(); //squaresのコピーの配列を作成
@@ -20,13 +21,14 @@ export default function Board({
       nextSquares[i] = "O";
     }
     onPlay(nextSquares);
-    console.log(squares);
   }
 
-  const winner = calculateWinner(squares);
+  const win = calculateWinner(squares);
+  let line: number[] = [];
   let status;
-  if (winner) {
-    status = "Winner: " + winner;
+  if (win.winner != null && win.line != null) {
+    status = "Winner: " + win.winner;
+    line = win.line;
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
@@ -41,6 +43,7 @@ export default function Board({
               value={squares[index]}
               onSquareClick={() => handleClick(index)}
               key={index}
+              className={line.includes(index) ? "bg-red-300" : null}
             />
           );
         })}
@@ -49,7 +52,10 @@ export default function Board({
   );
 }
 
-function calculateWinner(squares: Array<string | null>): string | null {
+function calculateWinner(squares: Array<string | null>): {
+  winner: string | null;
+  line: Array<number> | null;
+} {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -65,8 +71,8 @@ function calculateWinner(squares: Array<string | null>): string | null {
     // 列の3箇所全ての記号が同じか比較
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       // 記号を返す
-      return squares[a];
+      return { winner: squares[a], line: [a, b, c] };
     }
   }
-  return null;
+  return { winner: null, line: null };
 }
