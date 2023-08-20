@@ -7,7 +7,7 @@ export default function Square({
 }) {
   return (
     <button
-      className="text-2xl font-bold border h-[34px] w-[34px] text-center float-left text-black"
+      className="text-2xl font-bold border h-[34px] w-[34px] text-center float-left"
       onClick={onSquareClick}
     >
       {value}

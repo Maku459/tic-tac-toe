@@ -33,7 +33,7 @@ export default function Board({
 
   return (
     <>
-      <div className="status text-black">{status}</div>
+      <div className="">{status}</div>
       <div className="grid grid-cols-3 w-[100px]">
         {squares.map((_elm, index: number) => {
           return (
