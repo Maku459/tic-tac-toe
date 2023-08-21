@@ -11,6 +11,7 @@ export default function Game() {
 
   function handlePlay(nextSquares: Array<string | null>) {
     // その時点までの履歴だけを保持する
+    // [['x', null, null ... null],['x','o', null ... null]...]
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
@@ -25,6 +26,14 @@ export default function Game() {
   }
 
   const moves = history.map((squares, move): JSX.Element => {
+    let location = "";
+    if (move > 0) {
+      // 1つ前のhistoryを確認して、内容に差分があるindexを特定する
+      const index = history[move - 1].findIndex((e, i) => e !== squares[i]);
+      // indexから着手場所の位置を計算し，表示したい文字列でlocationを上書きする
+      location =
+        " (" + ((index % 3) + 1) + "," + (Math.floor(index / 3) + 1) + ")";
+    }
     if (move === currentMove) {
       return (
         <li key={move}>
@@ -32,7 +41,8 @@ export default function Game() {
         </li>
       );
     }
-    const description = move > 0 ? "Go to move #" + move : "Go to game start";
+    const description =
+      move > 0 ? "Go to move #" + move + location : "Go to game start";
     return (
       <li key={move}>
         <button onClick={() => jumpTo(move)}>{description}</button>
